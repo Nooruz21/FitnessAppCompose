@@ -15,4 +15,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "FitnessAppCompose"
 include(":app")
- 
+include(":domain")
+include(":data")
