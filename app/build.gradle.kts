@@ -1,18 +1,25 @@
 plugins {
-    id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id(Plugins.AGP.application)
+    kotlin(Plugins.Kotlin.android)
+    kotlin(Plugins.Kotlin.kapt)
+    // Navigation Safe Args
+    id(Plugins.Navigation.safeArgs)
+    // Hilt
+    id(Plugins.Hilt.android)
+    // Kotlin Symbol Processing
+    id(Plugins.KSP.ksp)
 }
 
 android {
-    namespace = "com.example.fitnessappcompose"
-    compileSdk = 33
+    namespace = Namespaces.app
+    compileSdk = AndroidConfig.compileSdk
 
     defaultConfig {
-        applicationId = "com.example.fitnessappcompose"
-        minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        applicationId = Namespaces.app
+        minSdk = AndroidConfig.minSdk
+        targetSdk = AndroidConfig.targetSdk
+        versionCode = AndroidConfig.versionCode
+        versionName = AndroidConfig.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -21,8 +28,9 @@ android {
     }
 
     buildTypes {
-        release {
-            isMinifyEnabled = false
+        getByName(AndroidConfig.release) {
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -30,14 +38,15 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = Options.compileOptions
+        targetCompatibility = Options.compileOptions
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = Options.kotlinOptions
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
@@ -50,20 +59,48 @@ android {
 }
 
 dependencies {
+    implementation(project(":data"))
+    implementation(project(":domain"))
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation("androidx.activity:activity-compose:1.7.2")
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation(Libraries.Core.core)
+
+    implementation(Libraries.Activity.activity)
+
+    implementation(Libraries.Lifecycle.runtime)
+
+    implementation(Libraries.UIComponents.viewBindingDelegate)
+
+    // Core
+    implementation(Libraries.Core.core)
+    implementation(Libraries.Core.splashscreen)
+
+    // Coil
+    implementation(Libraries.Coil.coil)
+    implementation(Libraries.Coil.svg)
+
+    // Activity
+    implementation(Libraries.Activity.activity)
+
+    // Fragment
+    implementation(Libraries.Fragment.fragment)
+
+    // Lifecycle
+    implementation(Libraries.Lifecycle.viewModel)
+    implementation(Libraries.Lifecycle.runtime)
+    implementation(Libraries.Lifecycle.service)
+
+    // Navigation
+    implementation(Libraries.Navigation.fragment)
+    implementation(Libraries.Navigation.ui)
+
+    // Hilt
+    implementation(Libraries.Hilt.android)
+    kapt(Libraries.Hilt.compiler)
+
+    implementation(Libraries.Compose.composeUi)
+    implementation(Libraries.Compose.composeUiGraphics)
+    implementation(Libraries.Compose.composeMaterial)
+    implementation(Libraries.Compose.composeRuntime)
+    implementation(Libraries.Compose.composeUiToolingPreview)
+    implementation(Libraries.Compose.composeUiTooling)
 }
